@@ -43,6 +43,11 @@ Alternativa sin `uv`:
 python main.py
 ```
 
+Interfaz grafica (PyQt):
+```powershell
+uv run python main_gui.py
+```
+
 ## Calidad
 Lint:
 ```powershell
@@ -63,6 +68,17 @@ Tests:
 ```powershell
 uv run pytest -q
 ```
+
+## Generar EXE (Windows)
+Instala dependencias y empaqueta la GUI:
+
+```powershell
+uv sync --dev
+uv run pyinstaller --noconfirm --onefile --windowed --name participation-report-gui main_gui.py
+```
+
+El ejecutable queda en:
+- `dist/participation-report-gui.exe`
 
 ## CI
 - Pipeline en GitHub Actions: `.github/workflows/ci.yml`

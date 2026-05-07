@@ -29,5 +29,5 @@ Thumbs.db
 .vscode/
 .idea/
 
-
+# Logs
 errors.log
