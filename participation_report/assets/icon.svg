@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 172 172" width="172" height="172">
+  <!-- Fondo cuadrado redondeado -->
+  <rect x="0" y="0" width="172" height="172" rx="38" fill="#1cabde"/>
+  <!-- Acento esquina inferior derecha -->
+  <rect x="96" y="116" width="44" height="44" rx="12" fill="#76cce8" opacity="0.55"/>
+  <!-- Trazo vertical de la P -->
+  <rect x="52" y="34" width="22" height="104" rx="8" fill="#ffffff"/>
+  <!-- Arco superior de la P -->
+  <path d="M52,34 L104,34 Q144,34 144,70 Q144,106 104,106 L74,106 L74,90 L104,90 Q126,90 126,70 Q126,50 104,50 L74,50 L74,34 Z" fill="#ffffff"/>
+  <!-- Punto decorativo cian -->
+  <circle cx="90" cy="148" r="8" fill="#8ed0e1"/>
+</svg>
