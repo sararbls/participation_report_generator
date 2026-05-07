@@ -1,22 +1,22 @@
 # AGENTS.md
 
-Guía para agentes que trabajen en este repositorio.
+Guï¿½a para agentes que trabajen en este repositorio.
 
 ## 1) Objetivo del proyecto
-- Generar un informe Excel de participación a partir de uno o varios CSV.
+- Generar un informe Excel de participaciï¿½n a partir de uno o varios CSV.
 - Punto de entrada: `main.py`.
 - Salida: archivo Excel (`SALIDA`, por defecto `informe.xlsx`) con una hoja `Informe`.
 
 ## 2) Stack y dependencias
-- Python `>=3.14` (según `pyproject.toml`).
+- Python `>=3.14` (segï¿½n `pyproject.toml`).
 - Dependencias:
   - `pandas`
   - `openpyxl`
   - `python-dotenv`
-- Gestión de entorno recomendada: `uv` (existe `uv.lock`).
+- Gestiï¿½n de entorno recomendada: `uv` (existe `uv.lock`).
 
-## 3) Ejecución local
-1. Crear/editar `.env` en la raíz del proyecto.
+## 3) Ejecuciï¿½n local
+1. Crear/editar `.env` en la raï¿½z del proyecto.
 2. Ejecutar:
 
 ```powershell
@@ -29,7 +29,7 @@ Alternativa si no se usa `uv`:
 python main.py
 ```
 
-## 4) Contrato de configuración (.env)
+## 4) Contrato de configuraciï¿½n (.env)
 Variables esperadas:
 - `EMPRESA` (obligatoria)
 - `SALIDA` (opcional, default `informe.xlsx`)
@@ -43,7 +43,7 @@ Reglas:
 - Cada `PUBLICO_i` debe tener su `CSV_i` y viceversa.
 - Debe existir al menos el par `PUBLICO_1` + `CSV_1`.
 
-Ejemplo mínimo:
+Ejemplo mï¿½nimo:
 
 ```dotenv
 EMPRESA=MiEmpresa
@@ -54,43 +54,43 @@ CSV_1=data/clientes_20260507120000.csv
 ```
 
 ## 5) Comportamiento funcional clave
-- Extrae la fecha desde el nombre del CSV (patrón `YYYYMMDD` o `YYYYMMDDHHMMSS`) y la formatea como `dd/mm`.
-- Lee CSV con varias estrategias de parseo para tolerar comillas/separadores problemáticos.
+- Extrae la fecha desde el nombre del CSV (patrï¿½n `YYYYMMDD` o `YYYYMMDDHHMMSS`) y la formatea como `dd/mm`.
+- Lee CSV con varias estrategias de parseo para tolerar comillas/separadores problemï¿½ticos.
 - Requiere columnas: `IdUsuario`, `Nombre`, `Empresa`, `Estado`.
 - Filtrado de datos:
   - Solo filas de `EMPRESA`.
   - Excluye `Estado == "Anulado"`.
   - Si `Nombre == "Lote"`, usa `IdUsuario` como nombre mostrado.
-- Construye una sección de 3 columnas por público: `Nombre`, `Estado`, `% Participación`.
-- `% Participación` se calcula con fórmula Excel (`COUNTIF/COUNTA`) por estado.
+- Construye una secciï¿½n de 3 columnas por pï¿½blico: `Nombre`, `Estado`, `% Participaciï¿½n`.
+- `% Participaciï¿½n` se calcula con fï¿½rmula Excel (`COUNTIF/COUNTA`) por estado.
 
 ## 6) Convenciones para cambios
-- Mantener los mensajes de error/aviso en español (el código actual está en español).
-- Preservar el contrato de `.env` salvo que el cambio lo justifique explícitamente.
-- Si se modifica el parseo de CSV, conservar compatibilidad con entradas "sucias" (comillas, separador variable, líneas defectuosas).
-- Evitar introducir dependencias nuevas sin necesidad clara.
-- Mantener el script ejecutable con `uv run python main.py`.
+- Mantener los mensajes de error/aviso en espaol.
+- Preservar el contrato de `.env`.
+- **Calidad Mandataria:** ANTES de cualquier `git add`, `git commit` o `git push`, el agente DEBE ejecutar localmente y asegurar que pasen:
+  - `uv run ruff check .`
+  - `uv run mypy`
+  - `uv run pytest`
+- Si el CI falla, el agente es responsable de corregir el error (ej. dependencias de sistema faltantes en `.github/workflows/ci.yml`).
 
-## 7) Validación antes de cerrar tareas
-Checklist mínimo:
+## 7) Validacin antes de cerrar tareas
+Checklist mnimo:
 1. Ejecutar script con un `.env` realista.
 2. Confirmar que se genera el archivo de salida sin excepciones.
-3. Abrir el Excel y verificar:
-   - Título con fecha y empresa.
-   - Cabeceras y estilos básicos.
-   - Fórmulas de `% Participación` presentes y con formato `%`.
-4. Probar al menos un caso con filas `Anulado` y uno con `Nombre=Lote`.
+3. Abrir el Excel (si es posible) y verificar frmulas y datos.
+4. **Verificar que los tests pasen (`pytest`).**
+5. **Verificar que el linter y tipado pasen (`ruff` y `mypy`).**
 
 ## 8) Riesgos conocidos
-- `requires-python = ">=3.14"` puede no estar disponible en todos los entornos; verificar versión instalada.
-- El script depende de que el nombre del CSV contenga fecha válida.
-- Si cambian nombres de columnas en origen, fallará por contrato de columnas requeridas.
+- `requires-python = ">=3.14"`: Entorno de ejecucin y CI deben soportar Python 3.14+.
+- Dependencias de sistema: Algunas libreras como `pycairo` requieren dependencias de SO (`libcairo2-dev` en Ubuntu/CI).
+
 
 ## 9) Mejoras sugeridas (no implementadas)
-- Añadir tests automatizados para:
-  - extracción de fecha,
+- Aï¿½adir tests automatizados para:
+  - extracciï¿½n de fecha,
   - parseo de CSV,
   - filtrado por empresa/estado,
   - estructura del workbook.
-- Separar lógica en módulos (`config`, `io_csv`, `excel_builder`) para facilitar mantenimiento.
-- Añadir ejemplo `.env.example` y poblar `README.md`.
+- Separar lï¿½gica en mï¿½dulos (`config`, `io_csv`, `excel_builder`) para facilitar mantenimiento.
+- Aï¿½adir ejemplo `.env.example` y poblar `README.md`.

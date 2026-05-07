@@ -6,9 +6,9 @@ Evolucionar el proyecto hacia una herramienta mantenible, robusta y operable, ma
 ## Estado actual (2026-05-07)
 - Fase 1 (base tecnica): completada.
 - Fase 2 (testing): completada.
-- Fase 3 (calidad y DX): completada en baseline.
+- Fase 3 (calidad y DX): completada.
 - Fase 4 (robustez funcional): en progreso.
-- Fase 5 (distribucion/CI): baseline completado.
+- Fase 5 (distribucion/CI): completada (incluye fix de dependencias de sistema y lint).
 
 Validacion actual:
 - `uv run ruff check .` -> OK
@@ -75,9 +75,11 @@ Pendiente sugerido:
 2. Evaluar reglas para duplicados de usuario (segun negocio).
 3. Considerar orden/sanitizacion adicional de estados antes de exportar.
 
-### Fase 5 - Distribucion/CI (baseline completado)
+### Fase 5 - Distribucion/CI (completada)
 Completado:
 - CI en `.github/workflows/ci.yml` con `ruff`, `mypy`, `pytest`.
+- Fix de dependencias de sistema (`libcairo2-dev`) para `pycairo`.
+- Fix de errores de longitud de línea (E501) en scripts y código fuente.
 - Politica de ramas/PR documentada en `BRANCH_POLICY.md`.
 
 Pendiente sugerido:
