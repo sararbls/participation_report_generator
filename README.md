@@ -18,7 +18,6 @@ Dependencias usadas:
 1. Copia `.env.example` a `.env`.
 2. Ajusta:
 - `EMPRESA` (obligatoria)
-- `SALIDA` (opcional, si no se define o es `informe.xlsx`, se genera en `processed_data/` con timestamp)
 - `SEPARADOR` (opcional, default `;`)
 - pares `PUBLICO_i` + `CSV_i` (al menos `PUBLICO_1` + `CSV_1`)
 
@@ -78,7 +77,7 @@ uv run pytest -q
 - Guia para agentes: [AGENTS.md](./AGENTS.md)
 
 ## Resultado
-Se genera un Excel en `processed_data/` con nombre timestamped por defecto con una hoja `Informe` y una seccion por publico con:
+Se genera un Excel en `processed_data/` con nombre `reporte_participacion_[EMPRESA]_[YYYYMMDD_HHMMSS].xlsx`, con una hoja `Informe` y una seccion por publico con:
 - `Nombre`
 - `Estado`
 - `% Participacion`

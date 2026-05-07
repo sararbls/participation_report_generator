@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 @dataclass(frozen=True)
 class AppConfig:
     empresa: str
-    salida: str
     separador: str
     publicos_y_csvs: list[tuple[str, str]]
 
@@ -20,7 +19,6 @@ def load_config(env_file: str | None = None) -> AppConfig:
         load_dotenv()
 
     empresa = os.getenv("EMPRESA", "").strip()
-    salida = os.getenv("SALIDA", "informe.xlsx").strip()
     separador = os.getenv("SEPARADOR", ";").strip()
 
     publicos_y_csvs: list[tuple[str, str]] = []
@@ -42,7 +40,6 @@ def load_config(env_file: str | None = None) -> AppConfig:
 
     return AppConfig(
         empresa=empresa,
-        salida=salida,
         separador=separador,
         publicos_y_csvs=publicos_y_csvs,
     )

@@ -19,7 +19,6 @@ def test_load_config_ok(tmp_path, monkeypatch):
         "\n".join(
             [
                 "EMPRESA=Hospital Central",
-                "SALIDA=informe.xlsx",
                 "SEPARADOR=;",
                 "PUBLICO_1=Clientes",
                 "CSV_1=data/clientes.csv",
@@ -30,7 +29,6 @@ def test_load_config_ok(tmp_path, monkeypatch):
     cfg = load_config(str(env_file))
 
     assert cfg.empresa == "Hospital Central"
-    assert cfg.salida == "informe.xlsx"
     assert cfg.separador == ";"
     assert cfg.publicos_y_csvs == [("Clientes", "data/clientes.csv")]
 

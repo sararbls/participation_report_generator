@@ -1,6 +1,8 @@
 import sys
 from datetime import datetime
 from pathlib import Path
+import re
+import unicodedata
 
 import pandas as pd
 
@@ -10,26 +12,20 @@ from participation_report.domain import procesar_publico
 from participation_report.excel_builder import build_excel
 
 
-def _resolve_output_path(salida_config: str) -> str:
+def _slug_empresa(empresa: str) -> str:
+    base = unicodedata.normalize("NFD", empresa.strip())
+    sin_tildes = "".join(ch for ch in base if unicodedata.category(ch) != "Mn")
+    limpio = re.sub(r"[^A-Za-z0-9_-]+", "_", sin_tildes).strip("_")
+    return limpio or "empresa"
+
+
+def _resolve_output_path(empresa: str) -> str:
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     processed_dir = Path("processed_data")
     processed_dir.mkdir(parents=True, exist_ok=True)
 
-    salida = (salida_config or "").strip()
-    if not salida or salida == "informe.xlsx":
-        return str(processed_dir / f"informe_{timestamp}.xlsx")
-
-    path = Path(salida)
-    if path.is_absolute():
-        path.parent.mkdir(parents=True, exist_ok=True)
-        return str(path)
-
-    if path.parent == Path("."):
-        suffix = path.suffix or ".xlsx"
-        return str(processed_dir / f"{path.stem}_{timestamp}{suffix}")
-
-    path.parent.mkdir(parents=True, exist_ok=True)
-    return str(path)
+    default_name = f"reporte_participacion_{_slug_empresa(empresa)}_{timestamp}.xlsx"
+    return str(processed_dir / default_name)
 
 
 def generate_report(config: AppConfig) -> None:
@@ -69,6 +65,6 @@ def generate_report(config: AppConfig) -> None:
     print(f"[INFO] Fecha   : {fecha}")
     print(f"[INFO] Publicos: {', '.join(publicos)}")
 
-    salida_final = _resolve_output_path(config.salida)
+    salida_final = _resolve_output_path(config.empresa)
     build_excel(config.empresa, fecha, publicos, dataframes, salida_final)
     print(f"[OK] Informe guardado en: {salida_final}")
