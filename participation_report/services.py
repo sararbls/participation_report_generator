@@ -1,8 +1,8 @@
+import re
 import sys
+import unicodedata
 from datetime import datetime
 from pathlib import Path
-import re
-import unicodedata
 
 import pandas as pd
 

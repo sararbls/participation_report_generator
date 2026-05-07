@@ -1,5 +1,6 @@
-import pandas as pd
 import unicodedata
+
+import pandas as pd
 
 
 def procesar_publico(df: pd.DataFrame, empresa: str) -> pd.DataFrame:
