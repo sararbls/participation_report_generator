@@ -1,0 +1,31 @@
+﻿# Python caches
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual envs
+.venv/
+venv/
+
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache
+
+# Keep repository automation versioned
+!.github/
+
+# Local runtime/output data
+.env
+processed_data/
+
+# Local raw inputs (optional, keep out of git by default)
+data/
+
+# OS/editor artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
