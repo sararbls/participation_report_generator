@@ -1,10 +1,20 @@
-﻿from pathlib import Path
+import uuid
+from pathlib import Path
 
 import pytest
 
 
 @pytest.fixture
-def write_contacts_csv(tmp_path):
+def tmp_path(request: pytest.FixtureRequest) -> Path:
+    base_root = Path.home() / ".codex" / "memories" / "participation_report_generator-tests"
+    base_root.mkdir(parents=True, exist_ok=True)
+    test_dir = base_root / f"{request.node.name}-{uuid.uuid4().hex}"
+    test_dir.mkdir(parents=True, exist_ok=False)
+    return test_dir
+
+
+@pytest.fixture
+def write_contacts_csv(tmp_path: Path):
     def _write(filename: str, rows: list[dict[str, str]], sep: str = ";") -> Path:
         csv_file = tmp_path / filename
         headers = ["IdUsuario", "Nombre", "Empresa", "Estado"]
