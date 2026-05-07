@@ -4,16 +4,15 @@ import traceback
 from contextlib import redirect_stdout
 from pathlib import Path
 
-from PyQt6.QtGui import QColor, QFont, QPainter, QPolygon, QLinearGradient, QPalette, QIcon, QPixmap
+from PyQt6.QtCore import QPoint, QRectF, Qt
+from PyQt6.QtGui import QColor, QFont, QIcon, QPainter, QPaintEvent, QPixmap, QPolygon
 from PyQt6.QtSvg import QSvgRenderer
-from PyQt6.QtCore import QPoint, Qt, QPropertyAnimation, QEasingCurve, QByteArray, QRectF
 from PyQt6.QtWidgets import (
     QApplication,
     QComboBox,
     QFileDialog,
     QFrame,
     QGraphicsDropShadowEffect,
-    QGridLayout,
     QHBoxLayout,
     QLabel,
     QLineEdit,
@@ -95,7 +94,7 @@ def _shadow(radius: int = 18, alpha: int = 40, dy: int = 4) -> QGraphicsDropShad
 
 
 class ArrowComboBox(QComboBox):
-    def paintEvent(self, event) -> None:  # type: ignore[override]
+    def paintEvent(self, event: QPaintEvent | None) -> None:
         super().paintEvent(event)
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -143,7 +142,8 @@ class PublicoCsvRow:
 
 class SectionLabel(QLabel):
     """Etiqueta de sección con línea decorativa."""
-    def __init__(self, text: str, parent=None):
+
+    def __init__(self, text: str, parent: QWidget | None = None) -> None:
         super().__init__(text, parent)
         self.setObjectName("section")
 
@@ -627,9 +627,9 @@ class MainWindow(QMainWindow):
         if current:
             self.log_output.appendPlainText("")
         self.log_output.appendPlainText(chunk)
-        self.log_output.verticalScrollBar().setValue(
-            self.log_output.verticalScrollBar().maximum()
-        )
+        scrollbar = self.log_output.verticalScrollBar()
+        if scrollbar is not None:
+            scrollbar.setValue(scrollbar.maximum())
 
     def _show_error(self, text: str) -> None:
         self._append_log(text)
