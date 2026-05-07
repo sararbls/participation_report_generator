@@ -1,5 +1,6 @@
 import io
 import os
+import sys
 import traceback
 from contextlib import redirect_stdout
 from pathlib import Path
@@ -29,46 +30,62 @@ from PyQt6.QtWidgets import (
 from participation_report.config import AppConfig
 from participation_report.services import generate_report
 
+
+def resource_path(relative_path: str) -> str:
+    """Obtiene la ruta absoluta al recurso, funciona para dev y para PyInstaller."""
+    try:
+        # PyInstaller crea una carpeta temporal y guarda la ruta en _MEIPASS
+        base_path = Path(sys._MEIPASS)  # type: ignore[attr-defined]
+    except AttributeError:
+        # En modo desarrollo, usamos la ruta relativa al archivo gui.py
+        # gui.py está en src/participation_report/, por lo que subimos dos niveles para llegar a la raíz (src/)
+        # Pero queremos que relative_path funcione desde la raíz del proyecto o desde src
+        # La forma más segura es buscar la raíz del proyecto
+        base_path = Path(__file__).parent.parent.parent
+
+    return str(base_path / relative_path)
+
+
 # ── Paletas ──────────────────────────────────────────────────────────────────
 THEMES: dict[str, dict[str, str]] = {
     "light": {
-        "PRIMARY":   "#1cabde",
-        "LIGHT1":    "#8ed0e1",
-        "LIGHT2":    "#59bedf",
-        "TEXT":      "#4d4d4d",
-        "TEXT_SUB":  "#5a8ea0",
-        "ACCENT":    "#76cce8",
-        "BG":        "#eef9fc",
-        "CARD":      "rgba(255,255,255,0.86)",
-        "CARD_ROW":  "rgba(118,204,232,0.13)",
+        "PRIMARY": "#1cabde",
+        "LIGHT1": "#8ed0e1",
+        "LIGHT2": "#59bedf",
+        "TEXT": "#4d4d4d",
+        "TEXT_SUB": "#5a8ea0",
+        "ACCENT": "#76cce8",
+        "BG": "#eef9fc",
+        "CARD": "rgba(255,255,255,0.86)",
+        "CARD_ROW": "rgba(118,204,232,0.13)",
         "SCROLL_BG": "rgba(255,255,255,0.45)",
-        "BORDER":    "#b8e4f0",
-        "INPUT_BG":  "rgba(255,255,255,0.9)",
+        "BORDER": "#b8e4f0",
+        "INPUT_BG": "rgba(255,255,255,0.9)",
         "INPUT_FOC": "#ffffff",
         "COMBO_SEL": "#ffffff",
-        "DANGER":    "#d64545",
-        "DANGER_H":  "#bf3b3b",
-        "SHADOW_A":  "40",
+        "DANGER": "#d64545",
+        "DANGER_H": "#bf3b3b",
+        "SHADOW_A": "40",
         "TOGGLE_LBL": "🌙",
     },
     "dark": {
-        "PRIMARY":   "#1cabde",
-        "LIGHT1":    "#3a8fa8",
-        "LIGHT2":    "#2e7d99",
-        "TEXT":      "#e2eef2",
-        "TEXT_SUB":  "#7ab8cc",
-        "ACCENT":    "#1e6a82",
-        "BG":        "#0f1e24",
-        "CARD":      "rgba(22,40,50,0.95)",
-        "CARD_ROW":  "rgba(28,171,222,0.08)",
+        "PRIMARY": "#1cabde",
+        "LIGHT1": "#3a8fa8",
+        "LIGHT2": "#2e7d99",
+        "TEXT": "#e2eef2",
+        "TEXT_SUB": "#7ab8cc",
+        "ACCENT": "#1e6a82",
+        "BG": "#0f1e24",
+        "CARD": "rgba(22,40,50,0.95)",
+        "CARD_ROW": "rgba(28,171,222,0.08)",
         "SCROLL_BG": "rgba(15,30,38,0.80)",
-        "BORDER":    "#1e4d5e",
-        "INPUT_BG":  "rgba(18,34,44,0.95)",
+        "BORDER": "#1e4d5e",
+        "INPUT_BG": "rgba(18,34,44,0.95)",
         "INPUT_FOC": "#162830",
         "COMBO_SEL": "#1a3040",
-        "DANGER":    "#e05555",
-        "DANGER_H":  "#c94444",
-        "SHADOW_A":  "70",
+        "DANGER": "#e05555",
+        "DANGER_H": "#c94444",
+        "SHADOW_A": "70",
         "TOGGLE_LBL": "☀️",
     },
 }
@@ -102,9 +119,7 @@ class ArrowComboBox(QComboBox):
         painter.setBrush(QColor("#1cabde"))
         x = self.width() - 20
         y = self.height() // 2
-        triangle = QPolygon(
-            [QPoint(x - 5, y - 3), QPoint(x + 5, y - 3), QPoint(x, y + 4)]
-        )
+        triangle = QPolygon([QPoint(x - 5, y - 3), QPoint(x + 5, y - 3), QPoint(x, y + 4)])
         painter.drawPolygon(triangle)
         painter.end()
 
@@ -154,7 +169,7 @@ class MainWindow(QMainWindow):
         self._theme = "light"
 
         self.setWindowTitle("Participation Report Generator")
-        self.setWindowIcon(QIcon("participation_report/assets/icon.ico"))
+        self.setWindowIcon(QIcon(resource_path("src/participation_report/assets/icon.ico")))
         self.resize(1060, 700)
         self.setMinimumSize(820, 560)
 
@@ -203,7 +218,7 @@ class MainWindow(QMainWindow):
 
         # Icono centrado — renderizado desde SVG a alta resolución
         icon_label = QLabel()
-        svg_path = str(Path("participation_report/assets/icon.svg"))
+        svg_path = resource_path("src/participation_report/assets/icon.svg")
         size = 72
         pixmap = QPixmap(size, size)
         pixmap.fill(Qt.GlobalColor.transparent)
@@ -327,21 +342,21 @@ class MainWindow(QMainWindow):
         style = f"""
             /* Base */
             QMainWindow, QWidget {{
-                background-color: {t['BG']};
-                color: {t['TEXT']};
+                background-color: {t["BG"]};
+                color: {t["TEXT"]};
             }}
 
             /* Cards */
             QFrame#card {{
-                background: {t['CARD']};
-                border: 1px solid {t['BORDER']};
+                background: {t["CARD"]};
+                border: 1px solid {t["BORDER"]};
                 border-radius: 16px;
             }}
 
             /* Filas de público */
             QFrame#rowCard {{
-                background: {t['CARD_ROW']};
-                border: 1px solid {t['BORDER']};
+                background: {t["CARD_ROW"]};
+                border: 1px solid {t["BORDER"]};
                 border-radius: 10px;
             }}
 
@@ -351,8 +366,8 @@ class MainWindow(QMainWindow):
 
             /* Scroll de filas */
             QScrollArea#rowsScroll {{
-                background: {t['SCROLL_BG']};
-                border: 1px solid {t['BORDER']};
+                background: {t["SCROLL_BG"]};
+                border: 1px solid {t["BORDER"]};
                 border-radius: 12px;
             }}
 
@@ -360,41 +375,41 @@ class MainWindow(QMainWindow):
             QLabel#title {{
                 font-size: 24px;
                 font-weight: 700;
-                color: {t['PRIMARY']};
+                color: {t["PRIMARY"]};
                 letter-spacing: -0.3px;
             }}
             QLabel#subtitle {{
                 font-size: 12.5px;
-                color: {t['TEXT_SUB']};
+                color: {t["TEXT_SUB"]};
             }}
             QLabel#section {{
                 font-size: 13px;
                 font-weight: 600;
-                color: {t['PRIMARY']};
+                color: {t["PRIMARY"]};
                 padding-bottom: 2px;
-                border-bottom: 2px solid {t['ACCENT']};
+                border-bottom: 2px solid {t["ACCENT"]};
             }}
             QLabel {{
                 font-size: 11px;
-                color: {t['TEXT']};
+                color: {t["TEXT"]};
                 background: transparent;
             }}
 
             /* Inputs */
             QLineEdit, QPlainTextEdit, QComboBox {{
-                background: {t['INPUT_BG']};
-                border: 1.5px solid {t['BORDER']};
+                background: {t["INPUT_BG"]};
+                border: 1.5px solid {t["BORDER"]};
                 border-radius: 9px;
                 padding: 6px 10px;
-                color: {t['TEXT']};
-                selection-background-color: {t['LIGHT1']};
+                color: {t["TEXT"]};
+                selection-background-color: {t["LIGHT1"]};
             }}
             QLineEdit:focus, QPlainTextEdit:focus, QComboBox:focus {{
-                border-color: {t['PRIMARY']};
-                background: {t['INPUT_FOC']};
+                border-color: {t["PRIMARY"]};
+                background: {t["INPUT_FOC"]};
             }}
             QLineEdit:hover, QComboBox:hover {{
-                border-color: {t['LIGHT2']};
+                border-color: {t["LIGHT2"]};
             }}
 
             QComboBox {{
@@ -413,11 +428,11 @@ class MainWindow(QMainWindow):
                 height: 0px;
             }}
             QComboBox QAbstractItemView {{
-                border: 1px solid {t['BORDER']};
+                border: 1px solid {t["BORDER"]};
                 border-radius: 9px;
-                background: {t['COMBO_SEL']};
-                selection-background-color: {t['ACCENT']};
-                selection-color: {t['TEXT']};
+                background: {t["COMBO_SEL"]};
+                selection-background-color: {t["ACCENT"]};
+                selection-color: {t["TEXT"]};
                 padding: 4px;
                 outline: none;
             }}
@@ -430,12 +445,12 @@ class MainWindow(QMainWindow):
                 margin: 6px 2px;
             }}
             QScrollBar::handle:vertical {{
-                background: {t['LIGHT1']};
+                background: {t["LIGHT1"]};
                 border-radius: 4px;
                 min-height: 22px;
             }}
             QScrollBar::handle:vertical:hover {{
-                background: {t['PRIMARY']};
+                background: {t["PRIMARY"]};
             }}
             QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
                 height: 0px;
@@ -445,7 +460,7 @@ class MainWindow(QMainWindow):
             QPushButton#primaryButton {{
                 background: qlineargradient(
                     x1:0, y1:0, x2:1, y2:0,
-                    stop:0 {t['PRIMARY']}, stop:1 {t['LIGHT2']}
+                    stop:0 {t["PRIMARY"]}, stop:1 {t["LIGHT2"]}
                 );
                 color: #ffffff;
                 border: none;
@@ -459,7 +474,7 @@ class MainWindow(QMainWindow):
             QPushButton#primaryButton:hover {{
                 background: qlineargradient(
                     x1:0, y1:0, x2:1, y2:0,
-                    stop:0 {t['LIGHT2']}, stop:1 {t['PRIMARY']}
+                    stop:0 {t["LIGHT2"]}, stop:1 {t["PRIMARY"]}
                 );
             }}
             QPushButton#primaryButton:pressed {{
@@ -470,8 +485,8 @@ class MainWindow(QMainWindow):
             /* Botón secundario */
             QPushButton#secondaryButton {{
                 background: rgba(28, 171, 222, 0.12);
-                color: {t['PRIMARY']};
-                border: 1.5px solid {t['LIGHT1']};
+                color: {t["PRIMARY"]};
+                border: 1.5px solid {t["LIGHT1"]};
                 border-radius: 9px;
                 padding: 7px 16px;
                 font-size: 12px;
@@ -479,27 +494,27 @@ class MainWindow(QMainWindow):
             }}
             QPushButton#secondaryButton:hover {{
                 background: rgba(28, 171, 222, 0.22);
-                border-color: {t['PRIMARY']};
+                border-color: {t["PRIMARY"]};
             }}
 
             /* Botón toggle tema */
             QPushButton#themeButton {{
-                background: {t['CARD_ROW']};
-                border: 1.5px solid {t['BORDER']};
+                background: {t["CARD_ROW"]};
+                border: 1.5px solid {t["BORDER"]};
                 border-radius: 10px;
                 font-size: 16px;
                 padding: 0px;
             }}
             QPushButton#themeButton:hover {{
                 background: rgba(28, 171, 222, 0.20);
-                border-color: {t['PRIMARY']};
+                border-color: {t["PRIMARY"]};
             }}
 
             /* Botón genérico (examinar) */
             QPushButton {{
                 background: rgba(89, 190, 223, 0.15);
-                color: {t['PRIMARY']};
-                border: 1px solid {t['LIGHT1']};
+                color: {t["PRIMARY"]};
+                border: 1px solid {t["LIGHT1"]};
                 border-radius: 9px;
                 padding: 7px 14px;
                 font-weight: 600;
@@ -507,7 +522,7 @@ class MainWindow(QMainWindow):
             }}
             QPushButton:hover {{
                 background: rgba(28, 171, 222, 0.25);
-                border-color: {t['PRIMARY']};
+                border-color: {t["PRIMARY"]};
             }}
             QPushButton:pressed {{
                 background: rgba(28, 171, 222, 0.38);
@@ -516,7 +531,7 @@ class MainWindow(QMainWindow):
             /* Botón eliminar */
             QPushButton#dangerButton {{
                 background: rgba(214, 69, 69, 0.10);
-                color: {t['DANGER']};
+                color: {t["DANGER"]};
                 border: 1px solid rgba(214, 69, 69, 0.35);
                 border-radius: 9px;
                 font-size: 14px;
@@ -524,9 +539,9 @@ class MainWindow(QMainWindow):
                 padding: 0px;
             }}
             QPushButton#dangerButton:hover {{
-                background: {t['DANGER']};
+                background: {t["DANGER"]};
                 color: #ffffff;
-                border-color: {t['DANGER']};
+                border-color: {t["DANGER"]};
             }}
             QPushButton#dangerButton:disabled {{
                 background: rgba(180,180,180,0.08);

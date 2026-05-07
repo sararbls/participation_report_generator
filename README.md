@@ -1,99 +1,77 @@
-﻿# participation-report
+# Participation Report Generator
 
-> CI badge (reemplaza `OWNER/REPO` por tu repo):
-> `![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)`
+Genera un informe Excel de participación a partir de uno o varios archivos CSV de contactos, permitiendo filtrar y agrupar por diferentes públicos.
 
-Genera un informe Excel de participacion a partir de uno o varios CSV.
-
-## Requisitos
+## 🚀 Requisitos
 - Python >= 3.14
-- `uv` recomendado (hay `uv.lock`)
+- [uv](https://github.com/astral-sh/uv) (recomendado para gestión de dependencias)
 
-Dependencias usadas:
-- pandas
-- openpyxl
-- python-dotenv
+## 📁 Estructura del Proyecto
+- `src/`: Carpeta raíz del código fuente (Patrón Industria).
+  - `participation_report/`: Paquete principal con la lógica de negocio y GUI.
+- `main.py`: Lanzador unificado en la raíz.
+- `scripts/`: Herramientas de mantenimiento y automatización.
+- `data/`: Directorio para los archivos CSV de entrada.
+- `processed_data/`: Directorio de salida para los informes generados.
+- `tests/`: Pruebas unitarias e integración.
 
-## Configuracion
+## ⚙️ Configuración
 1. Copia `.env.example` a `.env`.
-2. Ajusta:
-- `EMPRESA` (obligatoria)
-- `SEPARADOR` (opcional, default `;`)
-- pares `PUBLICO_i` + `CSV_i` (al menos `PUBLICO_1` + `CSV_1`)
+2. Ajusta las variables necesarias:
+   - `EMPRESA`: Nombre de la organización (obligatorio).
+   - `SEPARADOR`: Carácter separador del CSV (por defecto `;`).
+   - Pares `PUBLICO_i` y `CSV_i`: Para configurar múltiples fuentes en modo CLI.
 
-Columnas requeridas en cada CSV:
+### Requisitos del CSV
+Cada archivo CSV debe contener al menos las siguientes columnas:
 - `IdUsuario`
 - `Nombre`
 - `Empresa`
 - `Estado`
 
-## Ejecucion
-Compatibilidad (actual):
+## 💻 Ejecución
+
+### Interfaz Gráfica (Recomendado)
 ```powershell
-uv run python main.py
+uv run main.py
 ```
 
-Forma modular (equivalente):
+### Modo CLI (Automatización)
 ```powershell
-uv run python -m participation_report.cli
+uv run main.py --cli --env-file .env
 ```
 
-Alternativa sin `uv`:
+### Como módulo de Python
 ```powershell
-python main.py
+uv run python -m participation_report
 ```
 
-Interfaz grafica (PyQt):
+## 🛠️ Desarrollo y Mantenimiento
+
+### Generar Icono
+Si actualizas el archivo SVG, regenera el icono multi-resolución:
 ```powershell
-uv run python main_gui.py
+uv run scripts/generate_icon.py
 ```
 
-## Calidad
-Lint:
+### Construir Ejecutable (.exe)
+Genera el paquete distribuible para Windows:
 ```powershell
-uv run ruff check .
+uv run scripts/build_exe.py
 ```
 
-Formato:
+## 🧪 Calidad y Tests
 ```powershell
-uv run ruff format .
+uv run ruff check .      # Linting
+uv run ruff format .     # Formateo automático
+uv run mypy              # Comprobación de tipos
+uv run pytest            # Ejecución de tests
 ```
 
-Tipado:
-```powershell
-uv run mypy
-```
+## 📄 Documentación Adicional
+- [ROADMAP.md](./ROADMAP.md): Estado de avance y próximas tareas.
+- [BRANCH_POLICY.md](./BRANCH_POLICY.md): Guía de contribución y ramas.
+- [AGENTS.md](./AGENTS.md): Instrucciones específicas para agentes IA.
 
-Tests:
-```powershell
-uv run pytest -q
-```
-
-## Generar EXE (Windows)
-Instala dependencias y empaqueta la GUI:
-
-```powershell
-uv sync --dev
-uv run pyinstaller --noconfirm --onefile --windowed --name participation-report-gui main_gui.py
-```
-
-El ejecutable queda en:
-- `dist/participation-report-gui.exe`
-
-## CI
-- Pipeline en GitHub Actions: `.github/workflows/ci.yml`
-- Ejecuta en `push` y `pull_request`:
-  - `ruff check`
-  - `mypy`
-  - `pytest`
-
-## Documentacion
-- Roadmap y estado de avance: [ROADMAP.md](./ROADMAP.md)
-- Politica de ramas/PR: [BRANCH_POLICY.md](./BRANCH_POLICY.md)
-- Guia para agentes: [AGENTS.md](./AGENTS.md)
-
-## Resultado
-Se genera un Excel en `processed_data/` con nombre `reporte_participacion_[EMPRESA]_[YYYYMMDD_HHMMSS].xlsx`, con una hoja `Informe` y una seccion por publico con:
-- `Nombre`
-- `Estado`
-- `% Participacion`
+## 📊 Resultado
+El sistema genera un archivo Excel en `processed_data/` con el formato `reporte_participacion_[EMPRESA]_[TIMESTAMP].xlsx`. Incluye un resumen general y secciones detalladas por público con porcentajes de participación.

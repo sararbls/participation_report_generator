@@ -1,4 +1,4 @@
-﻿import pytest
+import pytest
 
 from participation_report.csv_reader import cargar_csv
 
@@ -40,8 +40,7 @@ def test_cargar_csv_falla_si_faltan_columnas(tmp_path):
 def test_cargar_csv_con_separador_coma(tmp_path):
     csv_file = tmp_path / "contactos_20260507.csv"
     csv_file.write_text(
-        "IdUsuario,Nombre,Empresa,Estado\n"
-        "u1,Ana,Hospital Central,Completa\n",
+        "IdUsuario,Nombre,Empresa,Estado\nu1,Ana,Hospital Central,Completa\n",
         encoding="utf-8",
     )
 
@@ -54,7 +53,7 @@ def test_cargar_csv_con_separador_coma(tmp_path):
 def test_cargar_csv_limpia_comillas_simple_y_doble(tmp_path):
     csv_file = tmp_path / "contactos_20260507.csv"
     csv_file.write_text(
-        "\"IdUsuario\";\"Nombre\";\"Empresa\";\"Estado\"\n"
+        '"IdUsuario";"Nombre";"Empresa";"Estado"\n'
         "'u1';'Ana';'Hospital Central';'Completa'\n",
         encoding="utf-8",
     )
@@ -85,8 +84,7 @@ def test_cargar_csv_tolera_linea_defectuosa_en_engine_c(tmp_path):
 def test_cargar_csv_soporta_utf8_sig(tmp_path):
     csv_file = tmp_path / "contactos_20260507.csv"
     csv_file.write_text(
-        "IdUsuario;Nombre;Empresa;Estado\n"
-        "u1;Ána;Hospital Central;Completa\n",
+        "IdUsuario;Nombre;Empresa;Estado\nu1;Ána;Hospital Central;Completa\n",
         encoding="utf-8-sig",
     )
 
@@ -99,8 +97,7 @@ def test_cargar_csv_soporta_utf8_sig(tmp_path):
 def test_cargar_csv_soporta_latin1(tmp_path):
     csv_file = tmp_path / "contactos_20260507.csv"
     csv_file.write_text(
-        "IdUsuario;Nombre;Empresa;Estado\n"
-        "u1;Peña;Hospital Central;Completa\n",
+        "IdUsuario;Nombre;Empresa;Estado\nu1;Peña;Hospital Central;Completa\n",
         encoding="latin-1",
     )
 

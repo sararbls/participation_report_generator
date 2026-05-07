@@ -1,35 +1,69 @@
-﻿# Python caches
+# ==========================================
+# Python & Runtime
+# ==========================================
 __pycache__/
 *.py[cod]
-*.pyo
+*$py.class
 *.pyd
+*.pyo
+.python-version
+.env
 
-# Virtual envs
+# ==========================================
+# Virtual Environments
+# ==========================================
 .venv/
 venv/
+ENV/
+env/
 
-# Tool caches
+# ==========================================
+# Testing & Quality Tools
+# ==========================================
 .pytest_cache/
-.ruff_cache/
 .pytest-tmp/
+.ruff_cache/
+.mypy_cache/
 .uv-cache/
-.mypy_cache
+.coverage
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
 
-# Keep repository automation versioned
-!.github/
-
-# Local runtime/output data
-.env
-processed_data/
-
-# Local raw inputs (optional, keep out of git by default)
-data/
-
-# OS/editor artifacts
-.DS_Store
-Thumbs.db
+# ==========================================
+# IDEs & Editors
+# ==========================================
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
 
-# Logs
+# ==========================================
+# OS Specific
+# ==========================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==========================================
+# Build & Distribution
+# ==========================================
+build/
+dist/
+*.spec
+*.exe
+
+# ==========================================
+# Project Specific (Data & Output)
+# ==========================================
+data/
+processed_data/*.xlsx
+!processed_data/.gitkeep
 errors.log
+logs/

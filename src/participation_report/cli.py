@@ -1,4 +1,4 @@
-﻿import argparse
+import argparse
 
 from participation_report.config import load_config
 from participation_report.services import generate_report
