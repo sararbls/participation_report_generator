@@ -38,7 +38,8 @@ def resource_path(relative_path: str) -> str:
         base_path = Path(sys._MEIPASS)  # type: ignore[attr-defined]
     except AttributeError:
         # En modo desarrollo, usamos la ruta relativa al archivo gui.py
-        # gui.py está en src/participation_report/, por lo que subimos dos niveles para llegar a la raíz (src/)
+        # gui.py está en src/participation_report/, por lo que subimos dos niveles
+        # para llegar a la raíz (src/)
         # Pero queremos que relative_path funcione desde la raíz del proyecto o desde src
         # La forma más segura es buscar la raíz del proyecto
         base_path = Path(__file__).parent.parent.parent

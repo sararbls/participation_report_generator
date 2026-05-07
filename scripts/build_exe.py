@@ -15,7 +15,8 @@ def build():
     assets_dest = os.path.join("participation_report", "assets")
 
     # Construcción del comando
-    # Usamos sys.executable para obtener el path del python actual y ejecutar pyinstaller como módulo o buscar su exe
+    # Usamos sys.executable para obtener el path del python actual y ejecutar pyinstaller
+    # como módulo o buscar su exe
     pyinstaller_exe = os.path.join(os.path.dirname(sys.executable), "pyinstaller.exe")
     if not os.path.exists(pyinstaller_exe):
         pyinstaller_exe = "pyinstaller"  # Fallback
@@ -41,9 +42,8 @@ def build():
 
         print("\n" + "=" * 50)
         print("[OK] ¡Proceso completado con éxito!")
-        print(
-            f"El ejecutable se encuentra en: {os.path.abspath('dist/GeneradorReporteParticipacion.exe')}"
-        )
+        exe_path = os.path.abspath("dist/GeneradorReporteParticipacion.exe")
+        print(f"El ejecutable se encuentra en: {exe_path}")
         print("=" * 50)
 
     except subprocess.CalledProcessError as e:
